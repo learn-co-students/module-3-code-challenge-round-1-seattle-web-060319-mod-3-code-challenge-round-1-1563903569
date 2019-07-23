@@ -35,11 +35,9 @@ function renderImage(imageURL) {
     // adding the event listener to the submit button on the form, preventing the default action of the submit button, and using executing helper method newComment()
     commentForm.addEventListener('submit', function (e) {
       e.preventDefault()
-      // optimistically renders new comment in the comments list
-      let newComment = document.createElement('li')
-      newComment.innerText = commentForm.comment.value
-      document.getElementById('comments').appendChild(newComment)
-
+      // optimistically renders new comment in the comments list utilizing the helper function listComments()
+      listComments([{ "content": commentForm.comment.value }])
+      // saves the comment in the backend
       saveComment(commentForm.comment.value)
     })
 
