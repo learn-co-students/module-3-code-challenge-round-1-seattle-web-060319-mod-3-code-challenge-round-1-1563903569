@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('%c DOM Content Loaded and Parsed!', 'color: magenta')
 
-  let imageId = 3029 //Enter the id from the fetched image here
+  imageId = 3029 //Enter the id from the fetched image here
 
-  const imageURL = `https://randopic.herokuapp.com/images/${imageId}`
+  imageURL = `https://randopic.herokuapp.com/images/${imageId}`
 
-  const likeURL = `https://randopic.herokuapp.com/likes/`
+  likeURL = `https://randopic.herokuapp.com/likes/`
 
-  const commentsURL = `https://randopic.herokuapp.com/comments/`
+  commentsURL = `https://randopic.herokuapp.com/comments/`
 
   // using a helper function to get the image information from the server and loading the image
   loadImage(imageURL, imageId)
@@ -26,6 +26,11 @@ function loadImage(imageURL, imageId) {
     h4Tag.innerText = img.name
     likesTag.innerText = img.like_count
 
+    // adding the event listener to the like button and passing the image info helper function incrementLike when the button is clicked by the user
+    document.getElementById('like_button').addEventListener('click', function (e) {
+      incrementLike(img)
+    })
+
     // using a helper function to list out the comments
     listComments(img.comments)
   })
@@ -41,4 +46,26 @@ function listComments(commentsArray) {
     liTag.innerText = comment.content
     commentsList.appendChild(liTag)
   });
+}
+
+function incrementLike(img) {
+  const likesTag = document.querySelector('span#likes')
+  // converts the string to a number so that it will increment at the first click of the like button
+  img.like_count = Number(img.like_count)
+  // increments the like_count by +1
+  img.like_count++
+  // optimistically updates the front end to the new likes count
+  likesTag.innerText = img.like_count
+
+  // sends the POST request to the server
+  fetch(likeURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application.json'
+    },
+    body: JSON.stringify({
+      image_id: imageId,
+    })
+  }).then(resp => resp.json())
 }
