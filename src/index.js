@@ -32,7 +32,7 @@ function renderImage(imageURL) {
       incrementLike(img)
     })
 
-    // adding the event listener to the submit button on the form, preventing the default action of the submit button, and using executing helper method newComment()
+    // adding the event listener to the submit button on the form, preventing the default action of the submit button, and using executing helper method saveComment()
     commentForm.addEventListener('submit', function (e) {
       e.preventDefault()
       // optimistically renders new comment in the comments list utilizing the helper function listComments()
@@ -59,8 +59,7 @@ function listComments(commentsArray) {
     commentsList.appendChild(liTag)
 
     // adding a delete button to each comment made 
-    // ! BUT this would not work for new comments w/o refreshing the page!
-
+    // ! BUT this would not work for new comments w/o refreshing the page since the new comment is added optimistically and does not have a comment id associated with it
     let dltBtn = document.createElement('button')
     liTag.appendChild(dltBtn)
     dltBtn.innerText = ' x '
@@ -109,6 +108,5 @@ function saveComment(commentContent) {
 function deleteComment(comment, liTag) {
   fetch(`https://randopic.herokuapp.com/comments/${comment.id}`, {
     method: 'DELETE'
-  })
-  liTag.remove()
+  }).then(liTag.remove())
 }
