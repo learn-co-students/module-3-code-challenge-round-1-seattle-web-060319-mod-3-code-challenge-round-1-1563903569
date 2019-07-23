@@ -39,6 +39,8 @@ function renderImage(imageURL) {
       listComments([{ "content": commentForm.comment.value }])
       // saves the comment in the backend
       saveComment(commentForm.comment.value)
+      // resets input field to empty string
+      commentForm.comment.value = ""
     })
 
     // using a helper function to list out the comments
@@ -56,7 +58,9 @@ function listComments(commentsArray) {
     liTag.innerText = comment.content
     commentsList.appendChild(liTag)
 
-    // adding a delete button to each comment made.  this would not work for new comments w/o refreshing the page?
+    // adding a delete button to each comment made 
+    // ! BUT this would not work for new comments w/o refreshing the page!
+
     let dltBtn = document.createElement('button')
     liTag.appendChild(dltBtn)
     dltBtn.innerText = ' x '
