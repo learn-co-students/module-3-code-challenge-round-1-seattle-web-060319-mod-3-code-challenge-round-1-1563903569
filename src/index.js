@@ -10,15 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
   commentsURL = `https://randopic.herokuapp.com/comments/`
 
   // using a helper function to get the image information from the server and loading the image
-  loadImage(imageURL, imageId)
+  renderImage(imageURL, imageId)
 
 })
 
-function loadImage(imageURL, imageId) {
+function renderImage(imageURL) {
   // selecting the image tag, h4 tag, and likes span tag to populate with the initial fetched data
   const imgTag = document.getElementById('image')
   const h4Tag = document.querySelector('h4#name')
   const likesTag = document.querySelector('span#likes')
+  const commentForm = document.querySelector('form')
 
   // fetching the image information from the server
   fetch(imageURL).then(resp => resp.json()).then(img => {
@@ -29,6 +30,14 @@ function loadImage(imageURL, imageId) {
     // adding the event listener to the like button and passing the image info helper function incrementLike when the button is clicked by the user
     document.getElementById('like_button').addEventListener('click', function (e) {
       incrementLike(img)
+    })
+
+    // adding the event listener to the submit button on the form, preventing the default action of the submit button, and using executing helper method newComment()
+    commentForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      let newComment = document.createElement('li')
+      newComment.innerText = commentForm.comment.value
+      document.getElementById('comments').appendChild(newComment)
     })
 
     // using a helper function to list out the comments
