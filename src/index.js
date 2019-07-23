@@ -39,8 +39,8 @@ function showImg(img) {
   let form = document.getElementById("comment_form");
   let button = document.querySelector("submit");
 
-  let likeButton = document.getElementById("like_button")
-  likeButton.addEventListener('click', addLikes)
+  // let likeButton = document.getElementById("like_button")
+  // likeButton.addEventListener('click', addLikes)
 
 
   form.addEventListener("submit", function(e) {
@@ -63,6 +63,6 @@ function showImg(img) {
 
 }
 
-function addLikes(e){
-  console.log(e.target.innerText)
-}
+// function addLikes(e){
+//   console.log(e.target.innerText)
+// }
