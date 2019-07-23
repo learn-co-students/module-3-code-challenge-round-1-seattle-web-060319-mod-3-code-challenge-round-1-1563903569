@@ -55,6 +55,14 @@ function listComments(commentsArray) {
     let liTag = document.createElement('li')
     liTag.innerText = comment.content
     commentsList.appendChild(liTag)
+
+    // adding a delete button to each comment made.  this would not work for new comments w/o refreshing the page?
+    let dltBtn = document.createElement('button')
+    liTag.appendChild(dltBtn)
+    dltBtn.innerText = ' x '
+    dltBtn.addEventListener('click', function (e) {
+      deleteComment(comment, liTag)
+    })
   });
 }
 
@@ -92,4 +100,11 @@ function saveComment(commentContent) {
       content: commentContent
     })
   }).then(resp => resp.json())
+}
+
+function deleteComment(comment, liTag) {
+  fetch(`https://randopic.herokuapp.com/comments/${comment.id}`, {
+    method: 'DELETE'
+  })
+  liTag.remove()
 }
