@@ -63,6 +63,8 @@ function listComments(commentsArray) {
     let dltBtn = document.createElement('button')
     liTag.appendChild(dltBtn)
     dltBtn.innerText = ' x '
+    dltBtn.style.margin = '5px'
+    dltBtn.style.fontSize = '6pt'
     dltBtn.addEventListener('click', function (e) {
       deleteComment(comment, liTag)
     })
