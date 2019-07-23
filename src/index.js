@@ -35,9 +35,12 @@ function renderImage(imageURL) {
     // adding the event listener to the submit button on the form, preventing the default action of the submit button, and using executing helper method newComment()
     commentForm.addEventListener('submit', function (e) {
       e.preventDefault()
+      // optimistically renders new comment in the comments list
       let newComment = document.createElement('li')
       newComment.innerText = commentForm.comment.value
       document.getElementById('comments').appendChild(newComment)
+
+      saveComment(commentForm.comment.value)
     })
 
     // using a helper function to list out the comments
@@ -75,6 +78,20 @@ function incrementLike(img) {
     },
     body: JSON.stringify({
       image_id: imageId,
+    })
+  }).then(resp => resp.json())
+}
+
+function saveComment(commentContent) {
+  fetch(commentsURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application.json'
+    },
+    body: JSON.stringify({
+      image_id: imageId,
+      content: commentContent
     })
   }).then(resp => resp.json())
 }
