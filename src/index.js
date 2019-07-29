@@ -6,63 +6,86 @@ const likeURL = `https://randopic.herokuapp.com/likes/`;
 
 const commentsURL = `https://randopic.herokuapp.com/comments/`;
 
-fetch(imageURL)
-  .then(res => res.json())
-  .then(json => {
-    showImg(json);
+main();
+
+function main() {
+  getImg();
+}
+
+function getImg() {
+  fetch(imageURL)
+    .then(res => res.json())
+    .then(json => {
+      renderImg(json);
+    });
+}
+
+function renderImg(img) {
+  const imgTag = document.getElementById("image");
+  imgTag.src = img.url;
+
+  const ul = document.createElement("ul");
+  ul.innerText = img.name;
+  const div = document.getElementById("image_card");
+  div.appendChild(ul);
+
+  let comments = img.comments
+  comments.forEach(function(comment){
+    let li = document.createElement("li")
+    let ul = document.getElementById('comments')
+    li.innerText = comment.content
+    ul.appendChild(li)
+  })
+
+  const likes = document.getElementById("like_button");
+  const likeCount = img.like_count;
+  const span = document.getElementById("likes");
+  span.innerText = `${likeCount}`;
+  likes.addEventListener("click", function(e) {
+    span.innerText++;
+    console.log(span.innerText);
+    increaseLikes(e, img);
   });
 
-function showImg(img) {
-  let imgId = img.id;
-  let imgUrl = img.url;
-  let imgName = img.name;
-  let imgLikes = img.like_count;
-  let imgComments = img.comments;
-
-  let pic = document.getElementById("image");
-  pic.src = imgUrl;
-
-  let name = document.getElementById("name");
-  name.innerText = imgName;
-
-  let likes = document.getElementById("likes");
-  likes.innerText = imgLikes;
-
-  imgComments.forEach(function(comment) {
-    let comments = document.getElementById("comments");
-    let content = comment.content;
-    let li = document.createElement("li");
-    li.innerText = content;
-    comments.appendChild(li);
-  });
-
-  let form = document.getElementById("comment_form");
-  let button = document.querySelector("submit");
-
-  // let likeButton = document.getElementById("like_button")
-  // likeButton.addEventListener('click', addLikes)
-
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    let commentForm = document.getElementById("comment_input").value;
-    commentForm.placeholder = "";
-
-    fetch(commentsURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        image_id: imgId,
-        content: commentForm
-      })
-    }).then(res => res.json());
-  });
+  const commentForm = document.getElementById("comment_form")
+  commentForm.addEventListener("submit", function(e){
+    
+    addComment(e, img)
+  })
 
 }
 
-// function addLikes(e){
-//   console.log(e.target.innerText)
-// }
+function addComment(e, img){
+  e.preventDefault()
+  let commentContent = e.target[0].value
+  let ul = document.getElementById("comments")
+  let li = document.createElement("li")
+  ul.appendChild(li)
+  li.innerText = commentContent
+
+
+  fetch(commentsURL, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      image_id: img.id,
+      content: commentContent
+    })
+  }).then(res => res.json())
+}
+
+function increaseLikes(e, img) {
+  fetch(likeURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      image_id: img.id,
+    })
+  }).then(res => res.json())
+}
